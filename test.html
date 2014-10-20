@@ -16,6 +16,14 @@
           overflow: hidden;
           border:1px solid #ddd;
       }
+      .equalizer span {
+          vertical-align: bottom;
+          display: inline-block;
+          font-size: 0;
+          line-height: 0;
+          background: pink;
+          border-top: 2px solid red;
+      }
       .equalizer.small {
           width: 100px;
           height: 100px;
@@ -39,54 +47,45 @@
               verticalAlign: 'bottom',
               lineHeight: selectorHeight + 'px'
           });
-      
+
           // Кол-во столбиков
           var colQuantity = Math.ceil($(selector).width()/colWidth);
           var cols = new Array(colQuantity);
           for (var i = 0; i < cols.length; i++) {
               var span = $('<span/>').appendTo(selector);
               span.css({
-                  verticalAlign: 'bottom',
-                  display: 'inline-block',
-      
-                  fontSize: 0,
-                  lineHeight: 0,
-      
-                  width: colWidth,
-                  background: 'pink',
-                  borderTop: '2px solid red'
+                  width: colWidth
               });
           }
           var spans = $(selector + ' span');
-      
-          run_equalizer(selector, timeout, selectorHeight, spans);
+
+          spans.each(function(){
+              run_equalizer($(this), timeout, selectorHeight);
+          });
       }
-      
-      function run_equalizer (selector, timeout, selectorHeight, spans) {
-          heights = [];
-          spans.each(function (i) {
-              var colHeight = Math.round(selectorHeight * Math.random());
-              heights.push(colHeight);
-          });
 
-          spans.each(function(i){
-              $(this).css('height', heights[i]);
-          });
+      function run_equalizer (selector, timeout, selectorHeight) {
 
-          spans.animate(
+          selector.animate(
+                  {height: Math.round(selectorHeight * Math.random())},
+                  timeout,
+                  'linear'
+          );
+
+          selector.animate(
               {height: selectorHeight/2},
               timeout,
               'linear',
               function () {
-                  run_equalizer(selector, timeout, selectorHeight, spans);
+                  run_equalizer(selector, timeout, selectorHeight);
               }
           );
       }
-      
+
       window.onload = function () {
           setEqualizer('#eq_1 .equalizer', 1000, 2);
-//          setEqualizer('#eq_2 .equalizer', 1000, 2);
-//          setEqualizer('#eq_3 .equalizer', 1000, 2);
+          setEqualizer('#eq_2 .equalizer', 1000, 2);
+          setEqualizer('#eq_3 .equalizer', 1000, 2);
       }
     </script>
   </head>
