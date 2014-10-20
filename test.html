@@ -34,9 +34,10 @@
           if (!colWidth) {
               colWidth = 1;
           }
+          var selectorHeight = $(selector).height();
           $(selector).css({
               verticalAlign: 'bottom',
-              lineHeight: $(selector).height() + 'px'
+              lineHeight: selectorHeight + 'px'
           });
       
           // Кол-во столбиков
@@ -56,30 +57,36 @@
                   borderTop: '2px solid red'
               });
           }
+          var spans = $(selector + ' span');
       
-          run_equalizer(selector, timeout);
+          run_equalizer(selector, timeout, selectorHeight, spans);
       }
       
-      function run_equalizer (selector, timeout) {
-          $(selector + ' span').each(function (i) {
-              var colHeight = Math.round($(selector).height() * Math.random());
-              $(this).height(colHeight);
+      function run_equalizer (selector, timeout, selectorHeight, spans) {
+          heights = [];
+          spans.each(function (i) {
+              var colHeight = Math.round(selectorHeight * Math.random());
+              heights.push(colHeight);
           });
-      
-          $(selector + ' span').animate(
-              {height: $(selector).height()/2},
+
+          spans.each(function(i){
+              $(this).css('height', heights[i]);
+          });
+
+          spans.animate(
+              {height: selectorHeight/2},
               timeout,
               'linear',
               function () {
-                  run_equalizer(selector, timeout);
+                  run_equalizer(selector, timeout, selectorHeight, spans);
               }
           );
       }
       
       window.onload = function () {
           setEqualizer('#eq_1 .equalizer', 1000, 2);
-          setEqualizer('#eq_2 .equalizer', 1000, 2);
-          setEqualizer('#eq_3 .equalizer', 1000, 2);
+//          setEqualizer('#eq_2 .equalizer', 1000, 2);
+//          setEqualizer('#eq_3 .equalizer', 1000, 2);
       }
     </script>
   </head>
